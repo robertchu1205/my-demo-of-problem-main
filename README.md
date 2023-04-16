@@ -1,5 +1,17 @@
 # Interview challenge
 
+## emphasis about my project
+
+`clarifying from back forward`
+
+- CI
+   - For private and convenience, I just clarified how I would like to versioned the tag of docker images. Now I only defined .github.sha on the tag of docker image. It's definitely better if we only build and pack when it's a tag push. So we can just use ${{ github.ref }} on the tag of docker image and alter the version in Chart.yaml by bash command 'sed'
+   - In pytest, I only test 'GET' api for answering faster. And it will assert 400 when GET the endpoint, '/v1/history' because I doesn't make the redis server up during the pytest.
+- Database
+   - I picked redis server because it answers the fastest and is easiest for developers to use. I start writing and reading right after redis server's up
+- Helm Chart
+   - I only simply expose the service by ClusterIP since I assume the project's only in development phase and tested in internal network
+
 ## Coding Challenge
 
 Please create a REST API based on the attached OpenAPI/Swagger definition in your preferred language (Node.JS, TypeScript, Go, Python, Ruby, Perl, Crystal, Nim, etc.). In addition to the endpoints included in the Swagger definition, please ensure that a Prometheus metrics endpoint is available in your application under `/metrics`. The application should also provide a `/health` endpoint.
