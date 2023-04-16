@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ .Release.Name }}-redis
+spec:
+  serviceName: redis
+  replicas: {{ .Values.redis.replicas }}
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-redis
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}-redis
+    spec:
+      containers:
+      - name: redis
+        image: {{ .Values.redis.image }}
+        command:
+        - sh 
+        - -c 
+        - 'exec redis-server --requirepass "$REDIS_PASSWORD"'
+        env:
+        - name: REDIS_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: redis-secret
+              key: password
+        ports:
+        - containerPort: 6379

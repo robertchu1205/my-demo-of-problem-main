@@ -1,0 +1,5 @@
+flask
+flask_swagger_ui
+prometheus-flask-exporter
+redis
+pytest

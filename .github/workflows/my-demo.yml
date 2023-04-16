@@ -1,0 +1,66 @@
+name: Pipeline of my demo
+
+on: [push, pull_request]
+
+# on:
+#   push:
+#     tags:
+#       - '*'
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout codes
+      uses: actions/checkout@v2
+
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.9'
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+
+    - name: Run pytest
+      run: pytest server_pytest.py
+    
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Build Docker image
+      uses: docker/build-push-action@v2
+      with:
+        context: .
+        # I didn't connect with my own dockerhub account for demo
+        push: false
+        # push: true
+        tags: problem-main_myapp:${{ github.ref }}
+
+  pack:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Package Helm chart
+      run: |
+        helm package . -d charts/
+
+
+  # deploy:
+
+  #   runs-on: ubuntu-latest
+
+  #   steps:
+  #   - name: Deploy Helm chart
+  #     uses: helm/kubectl-action@master
+  #     with:
+  #       command: apply
+  #       args: -f mychart-*.tgz -n my-namespace --set serverVersion=${{ github.ref }} --set server.image=problem-main_myapp:${{ github.ref }}
+  #     env:
+  #       KUBECONFIG: ${{ secrets.KUBECONFIG }}

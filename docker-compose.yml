@@ -1,0 +1,22 @@
+version: '3'
+services:
+  redis:
+    image: redis
+    command: redis-server --requirepass password
+    environment:
+      REDIS_PASSWORD: password
+    ports:
+      - 6379:6379
+  myapp:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      REDIS_PASSWORD: password
+      DATABASE_URL: redis:6379
+    ports:
+      - "3000:3000"
+    stop_signal: SIGTERM
+    depends_on:
+      - redis
+  

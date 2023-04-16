@@ -1,0 +1,12 @@
+redis:
+  replicas: 1
+  image: redis
+  password: password
+
+server:
+  replicas: 1
+  image: problem-main_myapp
+
+
+databaseUrl: my-demo-redis:6379
+serverVersion: 0.1.0
